@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(uuid())
+  role           String   @default("FARMER") // 'FARMER' | 'ADMIN'
+  email          String   @unique
+  passwordHash   String
+  createdAt      DateTime @default(now())
+  
+  farms          Farm[]
+  alerts         Alert[]
+}
+
+model Farm {
+  id              String   @id @default(uuid())
+  userId          String
+  name            String
+  latitude        Float
+  longitude       Float
+  landSizeAcres   Float
+  soilType        String   // 'CLAY' | 'SANDY' | 'LOAMY'
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  yields          HistoricalYield[]
+  recommendations RecommendationHistory[]
+}
+
+model HistoricalYield {
+  id        String @id @default(uuid())
+  farmId    String
+  cropName  String
+  year      Int
+  yieldTons Float
+
+  farm      Farm   @relation(fields: [farmId], references: [id], onDelete: Cascade)
+}
+
+model RecommendationHistory {
+  id                 String   @id @default(uuid())
+  farmId             String
+  recommendedCrop    String
+  confidenceScore    Float
+  profitabilityScore Float
+  season             String   // 'KHARIF' | 'RABI' | 'ZAID'
+  createdAt          DateTime @default(now())
+
+  farm               Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
+}
+
+model Alert {
+  id        String  @id @default(uuid())
+  userId    String
+  alertType String
+  message   String
+  isRead    Boolean @default(false)
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
