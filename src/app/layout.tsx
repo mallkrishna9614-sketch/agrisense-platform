@@ -16,8 +16,8 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'AgriSense AI | Smart Crop Recommendations',
-  description: 'AI-driven agriculture advisory platform for optimal crop yield and profitability.',
+  title: 'AgriSense AI — Grow smarter, yield better',
+  description: 'AI-driven crop advisory platform trusted by 12,000+ farmers. 94% prediction accuracy. 3.2× profit increase.',
 };
 
 export default function RootLayout({

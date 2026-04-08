@@ -1,151 +1,224 @@
-'use client';
+import type { Metadata } from 'next';
+import AuthCard from '@/components/AuthCard';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import AuthForm from '@/components/AuthForm';
-
-const CountUp = ({ end, duration = 2, suffix = '' }: { end: number, duration?: number, suffix?: string }) => {
-    const [count, setCount] = useState(0);
-
-    useEffect(() => {
-        let startTime: number;
-        const animate = (timestamp: number) => {
-            if (!startTime) startTime = timestamp;
-            const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
-            setCount(progress * end);
-            if (progress < 1) requestAnimationFrame(animate);
-        };
-        requestAnimationFrame(animate);
-    }, [end, duration]);
-
-    return <span>{count % 1 === 0 ? count : count.toFixed(1)}{suffix}</span>;
+export const metadata: Metadata = {
+    title: 'AgriSense AI — Grow smarter, yield better',
+    description: 'AI-driven crop advisory platform trusted by 12,000+ farmers. 94% prediction accuracy. 3.2x profit increase.',
 };
+
+const LeafIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+        <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+    </svg>
+);
+
+const features = [
+    {
+        title: 'Soil intelligence',
+        desc: 'Analyse soil composition, pH, and nutrient levels to recommend the perfect crop match.',
+        icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/>
+            </svg>
+        ),
+    },
+    {
+        title: 'Micro-climate mapping',
+        desc: 'Hyperlocal weather data fused with satellite imagery to map your field climate zones.',
+        icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/>
+            </svg>
+        ),
+    },
+    {
+        title: 'Yield predictions',
+        desc: 'ML models trained on 10+ years of regional data deliver season-ahead yield forecasts.',
+        icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+            </svg>
+        ),
+    },
+    {
+        title: 'Market insights',
+        desc: 'Real-time commodity prices and demand signals so you sell at peak market value.',
+        icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+            </svg>
+        ),
+    },
+    {
+        title: 'Pest and disease alerts',
+        desc: 'Early-warning system that detects outbreaks using image recognition and regional risk models.',
+        icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+        ),
+    },
+    {
+        title: 'AI crop advisor',
+        desc: 'Chat with our agronomist AI for personalised guidance on planting, irrigation, and harvest timing.',
+        icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+        ),
+    },
+];
+
+const steps = [
+    {
+        num: '1',
+        title: 'Connect your farm',
+        desc: 'Enter your farm location, soil data, and crops you are considering in minutes.',
+    },
+    {
+        num: '2',
+        title: 'Get AI analysis',
+        desc: 'Our models process dozens of signals to surface the highest-value crop options.',
+    },
+    {
+        num: '3',
+        title: 'Grow with confidence',
+        desc: 'Follow the season-by-season advisory plan and track your results on the dashboard.',
+    },
+];
 
 export default function Home() {
     return (
-        <motion.main 
-            className="page-enter-active"
-            initial={{ opacity: 0, y: 44 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.28 } }}
-            style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', padding: '2rem', justifyItems: 'center', position: 'relative', overflow: 'hidden' }}
-        >
+        <>
+            {/* ── Navbar ─────────────────────────────────────────── */}
+            <header className="navbar">
+                <div className="container navbar-inner">
+                    <a href="/" className="navbar-logo">
+                        <span className="navbar-logo-icon"><LeafIcon /></span>
+                        AgriSense
+                    </a>
 
-            {/* Floating Particles */}
-            {Array.from({ length: 15 }).map((_, i) => (
-                <div
-                    key={i}
-                    style={{
-                        position: 'absolute',
-                        width: Math.random() * 6 + 2 + 'px',
-                        height: Math.random() * 6 + 2 + 'px',
-                        backgroundColor: 'var(--primary)',
-                        borderRadius: '50%',
-                        left: Math.random() * 100 + 'vw',
-                        top: Math.random() * 100 + 'vh',
-                        opacity: 0.2,
-                        animation: `ptFloat ${Math.random() * 5 + 5}s ease-in-out infinite`,
-                        animationDelay: `${Math.random() * 5}s`
-                    }}
-                />
-            ))}
+                    <nav aria-label="Main navigation">
+                        <ul className="navbar-links">
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="#how-it-works">How it works</a></li>
+                            <li><a href="#pricing">Pricing</a></li>
+                            <li><a href="#about">About</a></li>
+                        </ul>
+                    </nav>
 
-            {/* Radial Glows */}
-            <div style={{
-                position: 'absolute',
-                top: '20%',
-                left: '10%',
-                width: '40vw',
-                height: '40vw',
-                background: 'radial-gradient(circle, var(--glow-strong) 0%, transparent 70%)',
-                zIndex: -1,
-                filter: 'blur(80px)',
-                animation: 'breathe 8s ease-in-out infinite alternate',
-            }} />
-
-            <div style={{
-                position: 'absolute',
-                bottom: '10%',
-                right: '25%',
-                width: '30vw',
-                height: '30vw',
-                background: 'radial-gradient(circle, var(--glow) 0%, transparent 70%)',
-                zIndex: -1,
-                filter: 'blur(60px)',
-                animation: 'breathe 6s ease-in-out infinite alternate-reverse',
-            }} />
-
-            <div className="container" style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 1.2fr) minmax(300px, 1fr)', gap: '6rem', alignItems: 'center' }}>
-
-                {/* Left Side: Hero Copy */}
-                <motion.div 
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                >
-                    <div style={{
-                        display: 'inline-block',
-                        padding: '0.5rem 1rem',
-                        background: 'rgba(76, 175, 101, 0.1)',
-                        color: 'var(--accent)',
-                        borderRadius: '20px',
-                        fontWeight: '600',
-                        fontSize: '0.875rem',
-                        marginBottom: '1.5rem',
-                        border: '1px solid rgba(76, 175, 101, 0.2)'
-                    }}>
-                        🌱 Next-Gen AgTech
-                    </div>
-                    
-                    <h1 className="heading-1" style={{ marginBottom: '1.5rem', position: 'relative' }}>
-                        Grow Smarter, <br />
-                        <span style={{ color: 'var(--primary)', position: 'relative', display: 'inline-block' }}>
-                            Yield Better.
-                            <motion.span 
-                                initial={{ width: 0 }}
-                                animate={{ width: '100%' }}
-                                transition={{ duration: 1, delay: 0.5, ease: "easeInOut" }}
-                                style={{
-                                    position: 'absolute',
-                                    bottom: '0.1em',
-                                    left: 0,
-                                    height: '0.12em',
-                                    background: 'var(--accent)',
-                                    borderRadius: '4px',
-                                    zIndex: -1,
-                                    opacity: 0.5
-                                }}
-                            />
-                        </span>
-                    </h1>
-                    
-                    <p className="text-muted" style={{ fontSize: '1.25rem', lineHeight: 1.6, marginBottom: '3rem', maxWidth: '500px' }}>
-                        Unleash AI-driven analytics to determine the optimal crop for your unique soil and micro-climate.
-                    </p>
-
-                    <div style={{ display: 'flex', gap: '3rem' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <span style={{ fontSize: '2.5rem', fontWeight: '800', fontFamily: 'var(--font-syne)', color: 'var(--accent)' }}>
-                                <CountUp end={94} suffix="%" />
-                            </span>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Prediction Accuracy</span>
-                        </div>
-                        <div style={{ width: '1px', background: 'var(--border)' }}></div>
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <span style={{ fontSize: '2.5rem', fontWeight: '800', fontFamily: 'var(--font-syne)', color: 'var(--accent)' }}>
-                                <CountUp end={2.4} suffix="x" />
-                            </span>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Avg Profit Increase</span>
-                        </div>
-                    </div>
-                </motion.div>
-
-                {/* Right Side: Auth Form */}
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <AuthForm />
+                    <a href="#get-started" className="btn btn-primary">Get started</a>
                 </div>
+            </header>
 
-            </div>
-        </motion.main>
+            <main>
+                {/* ── Hero ───────────────────────────────────────── */}
+                <section className="hero" aria-labelledby="hero-headline">
+                    <div className="container">
+                        <div className="hero-badge">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            Next-gen AgTech platform
+                        </div>
+
+                        <h1 className="hero-headline" id="hero-headline">
+                            Grow smarter,{' '}
+                            <span className="green">yield better.</span>
+                        </h1>
+
+                        <p className="hero-subtitle">
+                            AgriSense uses satellite data, soil science, and machine learning to give every farmer a precision edge — no agronomy degree required.
+                        </p>
+
+                        <div className="hero-ctas">
+                            <a href="#get-started" className="btn btn-primary btn-lg">Start for free</a>
+                            <a href="#how-it-works" className="btn btn-outline btn-lg">See how it works</a>
+                        </div>
+
+                        <div className="hero-stats" role="list" aria-label="Platform statistics">
+                            <div className="hero-stat" role="listitem">
+                                <div className="hero-stat-value">94%</div>
+                                <div className="hero-stat-label">Prediction accuracy</div>
+                            </div>
+                            <div className="hero-stat" role="listitem">
+                                <div className="hero-stat-value">3.2x</div>
+                                <div className="hero-stat-label">Profit increase</div>
+                            </div>
+                            <div className="hero-stat" role="listitem">
+                                <div className="hero-stat-value">12k+</div>
+                                <div className="hero-stat-label">Farmers trust us</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* ── Features ───────────────────────────────────── */}
+                <section className="section section-alt" id="features" aria-labelledby="features-title">
+                    <div className="container">
+                        <p className="section-label">Features</p>
+                        <h2 className="section-title" id="features-title">Everything your farm needs</h2>
+                        <p className="section-sub">
+                            From soil to market, every decision is backed by real-time AI insights — all in one platform.
+                        </p>
+
+                        <div className="features-grid">
+                            {features.map((f) => (
+                                <article className="feature-card" key={f.title}>
+                                    <div className="feature-icon-wrap" aria-hidden="true">{f.icon}</div>
+                                    <h3 className="feature-title">{f.title}</h3>
+                                    <p className="feature-desc">{f.desc}</p>
+                                </article>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* ── How it works ───────────────────────────────── */}
+                <section className="section" id="how-it-works" aria-labelledby="how-title">
+                    <div className="container">
+                        <p className="section-label">How it works</p>
+                        <h2 className="section-title" id="how-title">Up and running in minutes</h2>
+                        <p className="section-sub">
+                            No complex setup. Connect your farm data and let the AI handle the rest.
+                        </p>
+
+                        <div className="steps-row">
+                            {steps.map((s) => (
+                                <div className="step" key={s.num}>
+                                    <div className="step-num" aria-hidden="true">{s.num}</div>
+                                    <h3 className="step-title">{s.title}</h3>
+                                    <p className="step-desc">{s.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* ── Auth ───────────────────────────────────────── */}
+                <section className="auth-section" id="get-started" aria-labelledby="auth-title">
+                    <div className="container">
+                        <p className="section-label" style={{ textAlign: 'center' }}>Get started</p>
+                        <h2 className="section-title" id="auth-title" style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
+                            Join 12,000+ farmers
+                        </h2>
+                        <p className="section-sub" style={{ textAlign: 'center', margin: '0 auto 2.5rem' }}>
+                            Create a free account and get your first crop report in under 5 minutes.
+                        </p>
+                        <AuthCard />
+                    </div>
+                </section>
+            </main>
+
+            {/* ── Footer ─────────────────────────────────────────── */}
+            <footer className="footer" id="about">
+                <div className="container footer-inner">
+                    <a href="/" className="navbar-logo" style={{ fontSize: '1rem' }}>
+                        <span className="navbar-logo-icon"><LeafIcon /></span>
+                        AgriSense
+                    </a>
+                    <p className="footer-copy">2025 AgriSense AI. All rights reserved.</p>
+                </div>
+            </footer>
+        </>
     );
 }
